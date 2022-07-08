@@ -1,0 +1,15 @@
+name: 'Relyance SCI Scan'
+inputs:
+  access-token:
+    description: 'Relyance access token'
+    required: true
+runs:
+  using: "composite"
+  steps:      
+    - name: Pull and run SCI binary 
+      run: |
+        curl -f --header "x-rel-access-token:${{ inputs.access-token }}" "https://playco.relyance.ai/api/download?type=image" --output relyance_inspector.tar.gz
+        docker load --input relyance_inspector.tar.gz
+        docker run --rm -v `pwd`:/repo relyance_inspector:latest
+        docker image rm relyance_inspector:latest
+      shell: bash

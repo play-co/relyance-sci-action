@@ -8,5 +8,8 @@ runs:
   steps:      
     - name: Pull and run SCI binary 
       run: |
-        echo "Temporarily disabled due to Relyance account expiry"
+        curl -f --header "x-rel-access-token:${{ inputs.access-token }}" "https://playco.relyance.ai/api/download?type=image" --output relyance_inspector.tar.gz
+        docker load --input relyance_inspector.tar.gz
+        docker run --rm -v `pwd`:/repo relyance_inspector:latest
+        docker image rm relyance_inspector:latest
       shell: bash
